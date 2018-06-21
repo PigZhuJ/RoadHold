@@ -1,9 +1,6 @@
-package Test;
+package waveForm;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -26,21 +23,23 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.RectangleInsets;
 
 
-class MemoryUsageDemo extends JPanel {
+class Dynamatic {
     private TimeSeries total;
     private TimeSeries free;
 
-    public MemoryUsageDemo(int maxAge) {
-        super(new BorderLayout());
-        this.total = new TimeSeries("Total Memory", Millisecond.class);
-        this.total.setMaximumItemAge(maxAge);
-        this.free = new TimeSeries("Free Memory", Millisecond.class);
-        this.free.setMaximumItemAge(maxAge);
+    public JPanel getDynamatic(int maxAge) {
+        JPanel jPanel=new JPanel();
+        jPanel.setLayout(new BorderLayout());
+        jPanel.setPreferredSize(new Dimension(300,200));
+        total = new TimeSeries("参考线", Millisecond.class);
+        total.setMaximumItemAge(maxAge);
+        free = new TimeSeries("波形", Millisecond.class);
+        free.setMaximumItemAge(maxAge);
         TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(this.total);
-        dataset.addSeries(this.free);
-        DateAxis domain = new DateAxis("Time");
-        NumberAxis range = new NumberAxis("Memory");
+        dataset.addSeries(total);
+        dataset.addSeries(free);
+        DateAxis domain = new DateAxis("时间");
+        NumberAxis range = new NumberAxis("幅值");
         domain.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         range.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         domain.setLabelFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -59,11 +58,12 @@ class MemoryUsageDemo extends JPanel {
         domain.setUpperMargin(0.0);
         domain.setTickLabelsVisible(true);
         range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        JFreeChart chart = new JFreeChart("JVM Memory Usage", new Font("SansSerif", Font.BOLD, 24), plot, true);
+        JFreeChart chart = new JFreeChart("节点波形", new Font("SansSerif", Font.BOLD, 12), plot, true);
         chart.setBackgroundPaint(Color.white);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4), BorderFactory.createLineBorder(Color.black)));
-        add(chartPanel);
+        jPanel.add(chartPanel);
+        return jPanel;
     }
 
     private void addTotalObservation(double y) {
@@ -87,18 +87,6 @@ class MemoryUsageDemo extends JPanel {
             addFreeObservation(f);
         }
 
-        }
-        public static void main(String[] args) {
-            JFrame frame = new JFrame("Memory Usage Demo");
-            MemoryUsageDemo panel = new MemoryUsageDemo(30000);
-            frame.getContentPane().add(panel, BorderLayout.CENTER);
-            frame.setBounds(200, 120, 600, 280);
-            frame.setVisible(true);
-            panel.new DataGenerator(100).start();
-            frame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
     }
+
 }
