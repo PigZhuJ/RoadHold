@@ -74,6 +74,7 @@ public class DealWithTheReceivedData {
         System.out.println("已经发送给了Socket");
     }
 
+
     private static byte[] getConfigurePackage(String DeviceNumber ) {
         byte[] generateConfigByte=new byte[33];
         generateConfigByte[0]=0xA;
