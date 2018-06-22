@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
@@ -23,12 +24,14 @@ public class ThreadServer extends Thread {
     @Override
     public void  run() {
         try {
+            InetAddress address=socket.getInetAddress();
+            System.out.println("The Client Address is :"+address);//output the address of Client
             InputStream is=socket.getInputStream();//get inputStream
             DataInputStream dataInputStream=new DataInputStream(is);
             byte[] receiveByteArr=new byte[3072];//get the byte Array that received
             while (dataInputStream.read(receiveByteArr)!=-1){
                 System.out.println(Arrays.toString(receiveByteArr));//Output the array which received
-                dealWithTheReceiveArr(receiveByteArr);//deal with the
+                dealWithTheReceiveArr(receiveByteArr,socket);//deal with the package
             }
             dataInputStream.close();
             is.close();
