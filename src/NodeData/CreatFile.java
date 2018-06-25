@@ -11,7 +11,7 @@ public class CreatFile {
      * @return
      */
     public static String creatSaveDataFile(String DeviceNumber) throws IOException {
-        String filepath="C:\\Users\\Pigzhu\\IdeaProjects\\RoadHold\\src\\DataFile";
+        String filepath="C:\\Users\\zhujian\\IdeaProjects\\RoadHold\\src\\DataFile";
         String fileName=DeviceNumber;
         System.out.println(fileName);
         File file=new File(filepath+"\\"+fileName+".txt");

@@ -20,10 +20,10 @@ public class DealWithTheReceivedData {
     public static void dealWithTheReceiveArr(byte[] receiveByteArr,Socket socket) throws IOException {
         // the size of receiveByteArr[] is 3072
         //beigin to find header of pakage
+        int packagenum=0;//测试用
         byte[] receiveByteMidArr;
         short packageLen=0;//2 bytes
         for (int i = 0; i <receiveByteArr.length-1; i++) {
-            byte[] receiveMidBytes;
             if ((receiveByteArr[i]==0xA)&&(receiveByteArr[i+1]==0xD)){//find header of pakage
                 //读数据包的长度
                 packageLen= (short) ((0xff & receiveByteArr[i+2]) | (0xff00 & (receiveByteArr[i+3] << 8)));
@@ -38,6 +38,8 @@ public class DealWithTheReceivedData {
                     break;
                 }else if(receiveByteMidArr[4]==0x50){
                     dealWithTheReceiveDataPackage(receiveByteMidArr);//处理收到的数据包
+                    packagenum++;
+                    System.out.println("处理的包数目： "+packagenum);
                     break;
                 }
             }
@@ -113,7 +115,7 @@ public class DealWithTheReceivedData {
         String DeviceNumber=DeviceNumberByteArr[0]+""+DeviceNumberByteArr[1]+DeviceNumberByteArr[2]+DeviceNumberByteArr[3]
                 +DeviceNumberByteArr[4]+DeviceNumberByteArr[5]+DeviceNumberByteArr[6]+DeviceNumberByteArr[7];
         System.out.println(DeviceNumber);//输出节点名字
-        String filepath="C:\\Users\\Pigzhu\\IdeaProjects\\RoadHold\\src\\DataFile";
+        String filepath="C:\\Users\\zhujian\\IdeaProjects\\RoadHold\\src\\DataFile";
         String fileName=DeviceNumber;
         String filePathName=filepath+"\\"+fileName+".txt";
         saveArrData(filePathName,receiveByteArr);//把采集到的数据存进去

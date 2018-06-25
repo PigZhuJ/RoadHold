@@ -18,6 +18,7 @@ public class serverReceive{
         while (true){
             System.out.println("stop here");
             socket=serverSocket.accept();//block until the client to connect
+            System.out.println("have received the socket,"+"the socket ipAddress is: "+socket.getInetAddress().getHostAddress());
             ThreadServer ts=new ThreadServer(socket);
             ts.start();
             clientNumber++;

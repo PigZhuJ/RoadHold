@@ -20,6 +20,7 @@ public class ThreadServer extends Thread {
     public ThreadServer(Socket socket) {
         this.socket=socket;
     }
+    int num=0;
 
     @Override
     public void  run() {
@@ -28,10 +29,12 @@ public class ThreadServer extends Thread {
             System.out.println("The Client Address is :"+address);//output the address of Client
             InputStream is=socket.getInputStream();//get inputStream
             DataInputStream dataInputStream=new DataInputStream(is);
-            byte[] receiveByteArr=new byte[3072];//get the byte Array that received
+            byte[] receiveByteArr=new byte[255];//get the byte Array that received
             while (dataInputStream.read(receiveByteArr)!=-1){
                 System.out.println(Arrays.toString(receiveByteArr));//Output the array which received
-                dealWithTheReceiveArr(receiveByteArr,socket);//deal with the package
+//                dealWithTheReceiveArr(receiveByteArr,socket);//deal with the package
+                num++;
+                System.out.println("num: "+num);
             }
             dataInputStream.close();
             is.close();

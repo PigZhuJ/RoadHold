@@ -9,15 +9,12 @@ public class SaveData {
      * @param filePathName 文件路径名字
      * @return 返回是否存入到文件中去了
      */
-    public static boolean saveArrData(String filePathName,byte[] receiveByteArr) throws IOException {
-        boolean isSave=false;
+    public static void saveArrData(String filePathName,byte[] receiveByteArr) throws IOException {
         String arrToString=getArrayTransferToString(receiveByteArr);
-        BufferedWriter bw=new BufferedWriter(new FileWriter(filePathName));
-        bw.write(arrToString);
+        BufferedWriter bw=new BufferedWriter(new FileWriter(filePathName,true));
+        bw.write(arrToString+'\n');
         System.out.println(arrToString);
-        bw.newLine();
         bw.close();
-        return isSave;
     }
 
     private static String getArrayTransferToString(byte[] receiveByteArr) {
