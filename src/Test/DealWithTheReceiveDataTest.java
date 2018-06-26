@@ -1,18 +1,12 @@
 package Test;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Arrays;
-
-import static NodeData.DealWithTheReceivedData.dealWithTheReceiveArr;
+import static NodeData.DealWithTheReceivedData.dealWithTheReceiveDataPackage;
 
 public class DealWithTheReceiveDataTest {
     public static void main(String[] args) throws IOException {
-        System.out.println(Arrays.toString(getBytes((short) 255)));
-        System.out.println(Arrays.toString(getInputArray()));
-        Socket socket=new Socket();
-        dealWithTheReceiveArr(getInputArray(),socket);
-        System.out.println(Arrays.toString("节点1".getBytes()));
+     byte[] b={0xA,0xD,0xD,0xd,0xC,0xc,0xA,0xD,0xc,0xC};
+     dealWithTheReceiveDataPackage(b);
     }
 
     public static byte[] getInputArray() {

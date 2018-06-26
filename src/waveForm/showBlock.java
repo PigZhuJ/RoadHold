@@ -20,7 +20,7 @@ public class showBlock {
         waveMidJpanel.setPreferredSize(new Dimension(600,(waveMidJpanel.getComponentCount()/3)*210));
         Dynamatic dynamatic=new Dynamatic(5000);
         waveMidJpanel.add(new JPanel().add(dynamatic));
-        dynamatic.new DataGenerator(100).start();
+        dynamatic.new DataGenerator(20).start();
 
 //        waveJpanel.setViewportView((new Dynamatic()).getDynamatic(20));//全屏显示
         MainBoundar.jFrame.setVisible(true);

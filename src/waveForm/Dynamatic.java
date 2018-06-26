@@ -3,6 +3,7 @@ package waveForm;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -18,6 +19,10 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.RectangleInsets;
+
+import static NodeData.getWaveData.getXData;
+import static NodeData.getWaveData.getYData;
+import static NodeData.getWaveData.getZData;
 
 
 class Dynamatic extends JPanel {
@@ -80,9 +85,12 @@ class Dynamatic extends JPanel {
     private void addyObservation(double y) {
         this.y.add(new Millisecond(), y);
     }
+
     private void addzObservation(double y) {
         this.z.add(new Millisecond(), y);
     }
+
+
     class DataGenerator extends Timer implements ActionListener {
         DataGenerator(int interval) {
             super(interval, null);
@@ -90,9 +98,9 @@ class Dynamatic extends JPanel {
         }
 
         public void actionPerformed(ActionEvent event) {
-            double x = Math.random();
-            double y = Math.random();
-            double z=Math.random();
+            short x = getXData();
+            short y = getYData();
+            short z = getZData();
             addxObservation(x);
             addyObservation(y);
             addzObservation(z);
