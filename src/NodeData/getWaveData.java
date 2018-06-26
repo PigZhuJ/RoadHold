@@ -4,18 +4,17 @@ package NodeData;
  *
  */
 public class getWaveData {
-    public static short xData=0;
-    public static short yData=0;
-    public static short zData=0;
+    public static int xData=0;
+    public static int yData=0;
+    public static int zData=0;
 
-    public static  short getXData(){
-        System.out.println("开始返回x轴数据");
+    public static  int getXData(){
         return xData;
     }
-    public static  short getYData(){
+    public static  int getYData(){
         return yData;
     }
-    public static  short getZData(){
+    public static  int getZData(){
         return zData;
     }
 

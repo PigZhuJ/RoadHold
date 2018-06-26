@@ -37,8 +37,7 @@ public class ThreadServer extends Thread {
             InputStream is = socket.getInputStream();//get inputStream
             byte[] byteBuffer = new byte[255];
             int b = 0;
-            while (true) {
-                b = is.read(byteBuffer);
+            while ((b = is.read(byteBuffer))!=-1) {
                 byte[] dataArray=AddBytes(byteBuffer, b);
                 System.out.println(Arrays.toString(dataArray));
                 //开始处理包显示波形
@@ -73,7 +72,7 @@ public class ThreadServer extends Thread {
         //循环遍历每个字符
         while (i < count - 1) {
             //判断是否找到包头
-            if ((bytes[i] == 0xA) && (bytes[i + 1] == 0xD)) {
+            if ((bytes[i] == 0x0A) && (bytes[i + 1] == 0x0D)) {
                 int start = i;
                 i += 2;
                 boolean flagEnd = false;
@@ -81,7 +80,7 @@ public class ThreadServer extends Thread {
                     i++;
                     if (i == count) break;
                     //判断是否找到包尾
-                    if ((bytes[i - 1] == 0xD) && (bytes[i] == 0xA)) {
+                    if ((bytes[i - 1] == 0x0D) && (bytes[i] == 0x0A)) {
                         //找到包信息
                         flagEnd = true;
                         byte[] b = new byte[i - start + 1];

@@ -98,9 +98,9 @@ class Dynamatic extends JPanel {
         }
 
         public void actionPerformed(ActionEvent event) {
-            short x = getXData();
-            short y = getYData();
-            short z = getZData();
+            int x = getXData();
+            int y = getYData();
+            int z = getZData();
             addxObservation(x);
             addyObservation(y);
             addzObservation(z);

@@ -11,6 +11,7 @@ import static NodeData.SavaData.*;
  * 处理接收到的数据
  */
 public class DealWithTheReceivedData {
+        static int packagenum = 0;//测试用
     /**
      * deal with the byte Array that was received
      *
@@ -19,15 +20,14 @@ public class DealWithTheReceivedData {
     public static void dealWithTheReceiveArr(byte[] receiveByteArr, Socket socket) throws IOException {
 
         //beigin to find header of pakage
-        int packagenum = 0;//测试用
         byte[] receiveByteMidArr;
-        short packageLen = 0;//2 bytes
+        int packageLen = 0;//2 bytes
         //读数据包的长度
-        packageLen = (short) ((0xff & receiveByteArr[2]) | (0xff00 & (receiveByteArr[3] << 8)));
+        packageLen = (((receiveByteArr[2]& 0xFF<<8))|((receiveByteArr[3]& 0xFF)));
         System.out.println("packageLen: " + packageLen);//打桩测试
-        receiveByteMidArr = new byte[packageLen];//中间数组长度
+        receiveByteMidArr = new byte[packageLen-17];//中间数组长度
         System.out.println("receiveByteMidArr : " + receiveByteMidArr.length);
-        System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen);//copy Array
+        System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen-17);//copy Array
         if (receiveByteArr[4] == 0x21) {
             System.out.println("Begin to deal with the Hello package!");
             dealWithTheHelloPakage(receiveByteMidArr, socket);//处理hello包
@@ -108,22 +108,16 @@ public class DealWithTheReceivedData {
     public  static void dealWithTheReceiveDataPackage(byte[] receiveByteArr) throws IOException {
         for (int i = 0; i < receiveByteArr.length; i+=2) {
             if(i%6==0){
-                System.out.println(receiveByteArr[i]+","+receiveByteArr[i+1]);
-                short xData=(short) ((0xff & receiveByteArr[i]) | (0xff00 & (receiveByteArr[i+1] << 8)));
-                saveDataArrX(xData);
-                System.out.println("Datax="+xData);
+                int xData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
+//                saveDataArrX(xData);
                 getWaveData.xData=xData;
             }else if(i%6==2){
-                System.out.println(receiveByteArr[i]+","+receiveByteArr[i+1]);
-                short yData=(short) ((0xff & receiveByteArr[i]) | (0xff00 & (receiveByteArr[i+1] << 8)));
-                saveDataArrY(yData);
-                System.out.println("Datay="+yData);
+                int yData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
+//                saveDataArrY(yData);
                 getWaveData.yData=yData;
             }else if(i%6==4){
-                System.out.println(receiveByteArr[i]+","+receiveByteArr[i+1]);
-                short zData=(short) ((0xff & receiveByteArr[i]) | (0xff00 & (receiveByteArr[i+1] << 8)));
-                saveDataArrZ(zData);
-                System.out.println("Dataz="+zData);
+                int zData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
+//                saveDataArrZ(zData);
                 getWaveData.zData=zData;
             }
         }
