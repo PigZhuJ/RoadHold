@@ -1,11 +1,4 @@
-package waveForm;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+package Test;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,21 +12,25 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.RectangleInsets;
 
+import javax.swing.*;
+import java.awt.*;
 
-class Dynamatic extends JPanel {
+
+class DynamaticBeifen {
     private TimeSeries x;
     private TimeSeries y;
     private TimeSeries z;
 
-    public Dynamatic(int maxAge) {
-        super(new BorderLayout());
-        this.setPreferredSize(new Dimension(300, 200));//Jpanel的长宽
-        this.x = new TimeSeries("x轴", Millisecond.class);//设置x轴图例
-        this.x.setMaximumItemAge(maxAge);
-        this.y = new TimeSeries("y轴", Millisecond.class);//设置y轴图例
-        this.y.setMaximumItemAge(maxAge);
-        this.z = new TimeSeries("z轴", Millisecond.class);//设置z轴图例
-        this.z.setMaximumItemAge(maxAge);
+    public JPanel getDynamatic(int maxAge) {
+        JPanel jPanel=new JPanel();
+        jPanel.setLayout(new BorderLayout());//边界布局
+        jPanel.setPreferredSize(new Dimension(300,200));//Jpanel的长宽
+        x = new TimeSeries("x轴", Millisecond.class);//设置x轴图例
+        x.setMaximumItemAge(maxAge);
+        y = new TimeSeries("y轴", Millisecond.class);//设置y轴图例
+        y.setMaximumItemAge(maxAge);
+        z = new TimeSeries("z轴", Millisecond.class);//设置z轴图例
+        z.setMaximumItemAge(maxAge);
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
 
@@ -43,15 +40,15 @@ class Dynamatic extends JPanel {
 
         DateAxis domain = new DateAxis("时间");
         NumberAxis range = new NumberAxis("幅值");
-        domain.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        range.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        domain.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        range.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         domain.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         range.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
         renderer.setSeriesPaint(0, Color.red);
         renderer.setSeriesPaint(1, Color.green);
-        renderer.setSeriesPaint(2, Color.black);
-        renderer.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
+        renderer.setSeriesPaint(2,Color.black);
+        renderer.setStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
         XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 
         plot.setBackgroundPaint(Color.lightGray);
@@ -63,41 +60,23 @@ class Dynamatic extends JPanel {
         domain.setLowerMargin(0.0);
         domain.setUpperMargin(0.0);
         domain.setTickLabelsVisible(true);
+        range.setAutoRange(true);
         range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-
-        JFreeChart chart = new JFreeChart("节点波形", new Font("SansSerif", Font.BOLD, 10), plot, true);
+        JFreeChart chart = new JFreeChart("节点波形", new Font("SansSerif", Font.BOLD, 12), plot, true);
         chart.setBackgroundPaint(Color.white);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4), BorderFactory.createLineBorder(Color.black)));
-        add(chartPanel);
+        jPanel.add(chartPanel);
+        return jPanel;
     }
 
-
-    private void addxObservation(double y) {
+    private void addTotalObservation(double y) {
         this.x.add(new Millisecond(), y);
     }
 
-    private void addyObservation(double y) {
+    private void addFreeObservation(double y) {
         this.y.add(new Millisecond(), y);
     }
-    private void addzObservation(double y) {
-        this.z.add(new Millisecond(), y);
-    }
-    class DataGenerator extends Timer implements ActionListener {
-        DataGenerator(int interval) {
-            super(interval, null);
-            addActionListener(this);
-        }
-
-        public void actionPerformed(ActionEvent event) {
-            double x = Math.random();
-            double y = Math.random();
-            double z=Math.random();
-            addxObservation(x);
-            addyObservation(y);
-            addzObservation(z);
-        }
 
 
-    }
 }

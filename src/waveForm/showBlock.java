@@ -16,9 +16,11 @@ public class showBlock {
     /**
      * 显示波形图
      */
-    public static void showWaveBlock(){
-        waveMidJpanel.add((new Dynamatic()).getDynamatic(20));
+    public static void showWaveBlock() throws InterruptedException {
         waveMidJpanel.setPreferredSize(new Dimension(600,(waveMidJpanel.getComponentCount()/3)*210));
+        Dynamatic dynamatic=new Dynamatic(5000);
+        waveMidJpanel.add(new JPanel().add(dynamatic));
+        dynamatic.new DataGenerator(100).start();
 
 //        waveJpanel.setViewportView((new Dynamatic()).getDynamatic(20));//全屏显示
         MainBoundar.jFrame.setVisible(true);

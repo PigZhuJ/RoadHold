@@ -7,15 +7,17 @@ import java.net.Socket;
 import static Test.DealWithTheReceiveDataTest.getInputArray;
 
 public class clientTest extends Thread {
+    int num=0;
     @Override
     public void run() {
         try {
-            for (int i = 0; i <1000 ; i++) {
+            for (; ; ) {
                 Socket socket = new Socket("127.0.0.1", 8888);
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataOutputStream.write(getInputArray());
-                System.out.println("have send");
-                Thread.sleep(5000);
+                num++;
+                System.out.println("have send num = "+num);
+                Thread.sleep(50);
             }
         } catch (IOException e) {
             e.printStackTrace();

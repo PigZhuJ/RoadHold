@@ -16,7 +16,7 @@ public class DealWithTheReceiveDataTest {
     }
 
     public static byte[] getInputArray() {
-        byte[] blen = getBytes((short) 241);
+        byte[] blen = getBytes((short) 251);
         byte[] b = new byte[255];
         for (int i = 0; i < b.length; i++) {
             b[i] = 0;

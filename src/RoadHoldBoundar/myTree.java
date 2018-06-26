@@ -83,7 +83,11 @@ public class myTree implements ActionListener, MouseListener {
             if (e.getSource() == jMenuItem1) {
                 System.out.println("show the area1");
                 MainBoundar.jTextArea.append((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(System.currentTimeMillis()) + "  开始显示波形图\n");
-                showBlock.showWaveBlock();
+                try {
+                    showBlock.showWaveBlock();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
                 System.out.println("已经添加了");
             } else if (e.getSource() == jMenuItem2) {
                 System.out.println("show the area 2");
