@@ -26,13 +26,12 @@ import static NodeData.getWaveData.getXData;
 import static NodeData.getWaveData.getYData;
 import static NodeData.getWaveData.getZData;
 
-
-class Dynamatic extends JPanel {
+class XYZDynamaticWave extends JPanel {
     private TimeSeries x;
     private TimeSeries y;
     private TimeSeries z;
 
-    public Dynamatic(int maxAge) {
+    public XYZDynamaticWave(int maxAge) {
         super(new BorderLayout());
         this.setPreferredSize(new Dimension(500, 300));//Jpanel的长宽
         this.x = new TimeSeries("x轴", Millisecond.class);//设置x轴图例
@@ -95,8 +94,8 @@ class Dynamatic extends JPanel {
     }
 
 
-    class DataGenerator extends Timer implements ActionListener {
-        DataGenerator(int interval) {
+    class DataXGenerator extends Timer implements ActionListener {
+        DataXGenerator(int interval) {
             super(interval, null);
             addActionListener(this);
         }

@@ -1,24 +1,20 @@
 package NodeData;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static NodeData.DealWithTheReceivedData.dealWithTheReceiveArr;
 
 public class ThreadServer extends Thread {
     private Socket socket = null;//the Socket link to this Class
-    // 最大的缓冲区大小 未解析的数据流
-    int MaxCacheLen = 500;
-    // 未处理的数据
-    byte[] Caches = new byte[MaxCacheLen];
-    int CacheLen = 0;
+    private int CacheLen = 0;//缓冲区指针
+    private int MaxCacheLen = 500;// 最大的缓冲区大小 未解析的数据流
+    private byte[] Caches = new byte[MaxCacheLen];// 缓冲区
+    ExecutorService saveDataservicePool = Executors.newFixedThreadPool(100);//存数据的线程池
+    ExecutorService dealDataservicePool = Executors.newFixedThreadPool(100);//处理数据的线程池
 
     /**
      * constructor
@@ -29,26 +25,21 @@ public class ThreadServer extends Thread {
         this.socket = socket;
     }
 
-    int num = 0;
-    ExecutorService servicePool = Executors.newFixedThreadPool(100);
-
     @Override
     public void run() {
         try {
-            InetAddress address = socket.getInetAddress();
-            System.out.println("The Client Address is :" + address);//output the address of Client
-            InputStream is = socket.getInputStream();//get inputStream
+            InputStream is = socket.getInputStream();//获取输入流
             byte[] byteBuffer = new byte[256];
-            int b = 0;
-            while ((b = is.read(byteBuffer))!=-1) {
-                System.out.println("b="+b);
-                byte[] dataArray=AddBytes(byteBuffer, b);
-                System.out.println("收到的数据包长： "+dataArray.length);
-                System.out.println(Arrays.toString(dataArray));
-                //开始处理包显示波形
+            int readBytesNumber = 0;//读到的数据
+            while ((readBytesNumber = is.read(byteBuffer))!=-1) {
+                System.out.println("b="+readBytesNumber);
+                byte[] dataArray=AddBytes(byteBuffer, readBytesNumber);
+                System.out.println("收到的数据包长： "+dataArray.length+"  "+Arrays.toString(dataArray));
+                //开始把数据存下来
                 SaveReceivedData srd=new SaveReceivedData(dataArray);
-                servicePool.execute(srd);
-                dealWithTheReceiveArr(dataArray,socket);
+                saveDataservicePool.execute(srd);
+                DealWithTheReceivedDataThread drt=new DealWithTheReceivedDataThread(dataArray,socket);
+                dealDataservicePool.execute(drt);
             }
         } catch (IOException e) {
             e.printStackTrace();

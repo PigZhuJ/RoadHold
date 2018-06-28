@@ -11,25 +11,48 @@ import static NodeData.CreatFile.creatSaveDataFile;
 /**
  * 处理接收到的数据
  */
-public class DealWithTheReceivedData {
-   static  ExecutorService service = Executors.newFixedThreadPool(300);
-        static int packagenum = 0;//测试用
+public class DealWithTheReceivedDataThread extends Thread {
+    private byte[] receivedByteArr;//接收到的数组
+    private Socket socket;//接收数据的Socket
+    int packagenum = 0;//测试用，可以删除
+    ExecutorService service = Executors.newFixedThreadPool(300);
+
+    /**
+     * 构造函数
+     * @param receivedByteArr
+     * @param socket
+     */
+    public DealWithTheReceivedDataThread(byte[] receivedByteArr, Socket socket) {
+        this.receivedByteArr = receivedByteArr;
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
+        try {
+            dealWithTheReceiveArr(receivedByteArr,socket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * deal with the byte Array that was received
      *
      * @param receiveByteArr
      */
-    public static void dealWithTheReceiveArr(byte[] receiveByteArr, Socket socket) throws IOException {
-
-        //beigin to find header of pakage
+    public synchronized void dealWithTheReceiveArr(byte[] receiveByteArr, Socket socket) throws IOException {
         byte[] receiveByteMidArr;
-        int packageLen = 0;//2 bytes
         //读数据包的长度
-        packageLen = (((receiveByteArr[2]<<8& 0xFF00))|((receiveByteArr[3]& 0x00FF)));
+        int packageLen = (((receiveByteArr[2]<<8& 0xFF00))|((receiveByteArr[3]& 0x00FF)));
         System.out.println("packageLen: " + packageLen);//打桩测试
         receiveByteMidArr = new byte[packageLen];//中间数组长度
         System.out.println("receiveByteMidArr : " + receiveByteMidArr.length);
-        System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen);//copy Array
+        try {
+            System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen);
+        }catch (Exception e){
+            System.out.println("获取Data数据时出错");
+        }//copy Array
         if (receiveByteArr[4] == 0x21) {
             System.out.println("Begin to deal with the Hello package!");
             dealWithTheHelloPakage(receiveByteMidArr, socket);//处理hello包
@@ -48,7 +71,7 @@ public class DealWithTheReceivedData {
      *
      * @param receiveByteArr
      */
-    private static void dealWithTheHelloPakage(byte[] receiveByteArr, Socket socket) throws IOException {
+    private  void dealWithTheHelloPakage(byte[] receiveByteArr, Socket socket) throws IOException {
         byte[] DeviceNumberByteArr = new byte[8];
         System.arraycopy(receiveByteArr, 5, DeviceNumberByteArr, 0, 8);
         System.out.println(Arrays.toString(DeviceNumberByteArr));//打桩输出
@@ -66,7 +89,7 @@ public class DealWithTheReceivedData {
      *
      * @param socket
      */
-    private static void sendConfigurePackage(String DeviceNumber, Socket socket) throws IOException {
+    private  void sendConfigurePackage(String DeviceNumber, Socket socket) throws IOException {
         byte[] configArr;//生成的数组长度是33个字节
         configArr = getConfigurePackage(DeviceNumber);
         OutputStream os = socket.getOutputStream();
@@ -76,7 +99,7 @@ public class DealWithTheReceivedData {
     }
 
 
-    private static byte[] getConfigurePackage(String DeviceNumber) {
+    private  byte[] getConfigurePackage(String DeviceNumber) {
         byte[] generateConfigByte = new byte[33];
         generateConfigByte[0] = 0xA;
         generateConfigByte[1] = 0xD;
@@ -107,7 +130,7 @@ public class DealWithTheReceivedData {
      *
      * @param receiveByteArr
      */
-    public  static void dealWithTheReceiveDataPackage(byte[] receiveByteArr) throws IOException {
+    public synchronized void dealWithTheReceiveDataPackage(byte[] receiveByteArr) throws IOException {
         int length=receiveByteArr.length;
         int[] xDataArr=new int[length/6];
         int[] yDataArr=new int[length/6];
