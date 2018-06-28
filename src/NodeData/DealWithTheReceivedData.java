@@ -3,14 +3,16 @@ package NodeData;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static NodeData.CreatFile.creatSaveDataFile;
-import static NodeData.SavaData.*;
 
 /**
  * 处理接收到的数据
  */
 public class DealWithTheReceivedData {
+   static  ExecutorService service = Executors.newFixedThreadPool(300);
         static int packagenum = 0;//测试用
     /**
      * deal with the byte Array that was received
@@ -23,11 +25,11 @@ public class DealWithTheReceivedData {
         byte[] receiveByteMidArr;
         int packageLen = 0;//2 bytes
         //读数据包的长度
-        packageLen = (((receiveByteArr[2]& 0xFF<<8))|((receiveByteArr[3]& 0xFF)));
+        packageLen = (((receiveByteArr[2]<<8& 0xFF00))|((receiveByteArr[3]& 0x00FF)));
         System.out.println("packageLen: " + packageLen);//打桩测试
-        receiveByteMidArr = new byte[packageLen-17];//中间数组长度
+        receiveByteMidArr = new byte[packageLen];//中间数组长度
         System.out.println("receiveByteMidArr : " + receiveByteMidArr.length);
-        System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen-17);//copy Array
+        System.arraycopy(receiveByteArr, 11, receiveByteMidArr, 0, packageLen);//copy Array
         if (receiveByteArr[4] == 0x21) {
             System.out.println("Begin to deal with the Hello package!");
             dealWithTheHelloPakage(receiveByteMidArr, socket);//处理hello包
@@ -106,21 +108,27 @@ public class DealWithTheReceivedData {
      * @param receiveByteArr
      */
     public  static void dealWithTheReceiveDataPackage(byte[] receiveByteArr) throws IOException {
+        int length=receiveByteArr.length;
+        int[] xDataArr=new int[length/6];
+        int[] yDataArr=new int[length/6];
+        int[] zDataArr=new int[length/6];
         for (int i = 0; i < receiveByteArr.length; i+=2) {
             if(i%6==0){
-                int xData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
-//                saveDataArrX(xData);
+                int xData=(((receiveByteArr[i]<<8)& 0xFF00)|(receiveByteArr[i+1]& 0x00FF));
                 getWaveData.xData=xData;
+                xDataArr[i/6]=xData;
             }else if(i%6==2){
-                int yData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
-//                saveDataArrY(yData);
+                int yData=(((receiveByteArr[i]<<8)& 0xFF00)|(receiveByteArr[i+1]& 0x00FF));
                 getWaveData.yData=yData;
+                yDataArr[i/6]=yData;
             }else if(i%6==4){
-                int zData=(((receiveByteArr[i]<<8)& 0xFF)|(receiveByteArr[i+1]& 0xFF));
-//                saveDataArrZ(zData);
+                int zData=(((receiveByteArr[i]<<8)& 0xFF00)|(receiveByteArr[i+1]& 0x00FF));
                 getWaveData.zData=zData;
+                zDataArr[i/6]=zData;
             }
         }
+        SavaDataThread st=new SavaDataThread(xDataArr,yDataArr,zDataArr);
+        service.execute(st);
     }
 
 }

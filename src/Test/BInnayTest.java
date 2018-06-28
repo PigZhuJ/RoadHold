@@ -2,8 +2,16 @@ package Test;
 
 public class BInnayTest {
     public static void main(String[] args) {
-        byte a=0;
-        byte b=-120;
-        System.out.println((a& 0xFF)<<8|(b&0xFF));
+        int[] i={0,1,1,2,1};
+        BInnayTest b=new BInnayTest();
+        System.out.println(b.ArraytoString(i));
+    }
+    private String ArraytoString(int[] DataArr) {
+        String sx="";
+        for (int i = 0; i <DataArr.length-1; i++) {
+            sx=sx+DataArr[i]+",";
+        }
+        sx=sx+DataArr[DataArr.length-1];
+        return sx;
     }
 }

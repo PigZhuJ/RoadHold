@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -15,6 +16,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.Range;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -32,7 +34,7 @@ class Dynamatic extends JPanel {
 
     public Dynamatic(int maxAge) {
         super(new BorderLayout());
-        this.setPreferredSize(new Dimension(300, 200));//Jpanel的长宽
+        this.setPreferredSize(new Dimension(500, 300));//Jpanel的长宽
         this.x = new TimeSeries("x轴", Millisecond.class);//设置x轴图例
         this.x.setMaximumItemAge(maxAge);
         this.y = new TimeSeries("y轴", Millisecond.class);//设置y轴图例
@@ -56,7 +58,7 @@ class Dynamatic extends JPanel {
         renderer.setSeriesPaint(0, Color.red);
         renderer.setSeriesPaint(1, Color.green);
         renderer.setSeriesPaint(2, Color.black);
-        renderer.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
+        renderer.setStroke(new BasicStroke(0.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
         XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 
         plot.setBackgroundPaint(Color.lightGray);
@@ -68,6 +70,8 @@ class Dynamatic extends JPanel {
         domain.setLowerMargin(0.0);
         domain.setUpperMargin(0.0);
         domain.setTickLabelsVisible(true);
+        range.setAutoRange(true);
+//        range.setRange(new Range(-256,256));
         range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         JFreeChart chart = new JFreeChart("节点波形", new Font("SansSerif", Font.BOLD, 10), plot, true);
@@ -101,6 +105,9 @@ class Dynamatic extends JPanel {
             int x = getXData();
             int y = getYData();
             int z = getZData();
+//            double x=  Math.random()*256;
+//            double y=    Math.random()*256;
+//            double z=    Math.random()*256;
             addxObservation(x);
             addyObservation(y);
             addzObservation(z);

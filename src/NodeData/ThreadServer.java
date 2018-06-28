@@ -7,13 +7,15 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static NodeData.DealWithTheReceivedData.dealWithTheReceiveArr;
 
 public class ThreadServer extends Thread {
     private Socket socket = null;//the Socket link to this Class
     // 最大的缓冲区大小 未解析的数据流
-    int MaxCacheLen = 1500;
+    int MaxCacheLen = 500;
     // 未处理的数据
     byte[] Caches = new byte[MaxCacheLen];
     int CacheLen = 0;
@@ -28,6 +30,7 @@ public class ThreadServer extends Thread {
     }
 
     int num = 0;
+    ExecutorService servicePool = Executors.newFixedThreadPool(100);
 
     @Override
     public void run() {
@@ -35,12 +38,16 @@ public class ThreadServer extends Thread {
             InetAddress address = socket.getInetAddress();
             System.out.println("The Client Address is :" + address);//output the address of Client
             InputStream is = socket.getInputStream();//get inputStream
-            byte[] byteBuffer = new byte[255];
+            byte[] byteBuffer = new byte[256];
             int b = 0;
             while ((b = is.read(byteBuffer))!=-1) {
+                System.out.println("b="+b);
                 byte[] dataArray=AddBytes(byteBuffer, b);
+                System.out.println("收到的数据包长： "+dataArray.length);
                 System.out.println(Arrays.toString(dataArray));
                 //开始处理包显示波形
+                SaveReceivedData srd=new SaveReceivedData(dataArray);
+                servicePool.execute(srd);
                 dealWithTheReceiveArr(dataArray,socket);
             }
         } catch (IOException e) {
@@ -52,7 +59,7 @@ public class ThreadServer extends Thread {
     public byte[] AddBytes(byte[] message, int bytesRead) {
         byte[] dataArr = null;
         //采集到的数据与缓冲数据整合----------------------------------
-        byte[] bytes = new byte[2048];
+        byte[] bytes = new byte[1024];
         if (CacheLen > 0) {
             for (int j = 0; j < CacheLen; j++) {
                 bytes[j] = Caches[j];
