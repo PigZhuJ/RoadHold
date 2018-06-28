@@ -16,9 +16,9 @@ public class showBlock {
      */
     public static void showWaveBlock() throws InterruptedException {
         waveMidJpanel.setPreferredSize(new Dimension(600,(waveMidJpanel.getComponentCount()/2+1)*310));
-        Dynamatic dynamatic=new Dynamatic(60000);
+        Dynamatic dynamatic=new Dynamatic(30000);
         waveMidJpanel.add(new JPanel().add(dynamatic));
-        dynamatic.new DataGenerator(50).start();
+        dynamatic.new DataGenerator(30).start();
 
 //        waveJpanel.setViewportView((new Dynamatic()).getDynamatic(20));//全屏显示
         MainBoundar.jFrame.setVisible(true);

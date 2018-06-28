@@ -23,7 +23,7 @@ public class SaveReceivedData extends Thread {
 
     private synchronized void  save(byte[] receiveByteArr) throws IOException {
         String s=ArraytoString(receiveByteArr);
-        BufferedWriter bw=new BufferedWriter(new FileWriter("C:\\Users\\zhujian\\IdeaProjects\\RoadHold\\src\\DataFile\\test.txt",true));
+        BufferedWriter bw=new BufferedWriter(new FileWriter("test.txt",true));
         bw.write(new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").format(System.currentTimeMillis())+"   "+s);
         bw.write('\n');
         bw.close();

@@ -93,9 +93,28 @@ public class ThreadServer extends Thread {
                         byte[] b = new byte[i - start + 1];
                         for (int k = 0; k < (i - start + 1); k++) {
                             b[k] = bytes[start + k];
-
                         }
-                        dataArr = b;
+                        checkThePackage chp=new checkThePackage(b);
+                        if(chp.checkPackage()){
+                         dataArr = b;
+                         return dataArr;
+                        }else {
+                            if (chp.checkTheLength()) //如果数据段中包含0d 0a 结尾帧 通过此处进行跳过
+                            {
+                                continue;
+                            }
+                            if (chp.checkTheCRC())
+                            {
+                               //提取出有错误的帧 不放进缓冲区中
+                            }
+                            else
+                            {
+                                //放入缓冲中
+                                CacheAdd(bytes[start]);
+                                CacheAdd(bytes[start + 1]);
+                                i = start + 1;
+                            }
+                        }
                         break;
                     }
                 }

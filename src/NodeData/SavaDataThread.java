@@ -26,8 +26,8 @@ public class SavaDataThread extends Thread {
     }
 
     private synchronized void savexyzData(int[] xDataArr, int[] yDataArr, int[] zDataArr) throws IOException {
-        BufferedWriter bw=new BufferedWriter(new FileWriter("C:\\Users\\zhujian\\IdeaProjects\\RoadHold\\src\\DataFile\\testxyz.txt",true));
-        for (int i = 0; i < xDataArr.length; i++) {
+        BufferedWriter bw=new BufferedWriter(new FileWriter("testxyz.txt",true));
+            for (int i = 0; i < xDataArr.length; i++) {
             String s=""+xDataArr[i]+","+yDataArr[i]+","+zDataArr[i];
             bw.write(s);
             bw.write('\n');
